@@ -9,29 +9,23 @@
           - [either precalc and use geom\_col +
             geom\_text](#either-precalc-and-use-geom_col--geom_text)
           - [or use verbose after\_stat…](#or-use-verbose-after_stat)
-          - [first inspecting bar layer
-            (stat\_count)](#first-inspecting-bar-layer-stat_count)
-          - [then plot](#then-plot)
-  - [What if… {ggbarlabs}\!](#what-if-ggbarlabs)
+  - [What if… {ggbarlabs} w/
+    `geom_barlab_count`\!](#what-if-ggbarlabs-w-geom_barlab_count)
       - [Proposed User interface](#proposed-user-interface)
       - [Composing functions to this
         end](#composing-functions-to-this-end)
-          - [geom\_barlab\_count](#geom_barlab_count)
+          - [`geom_barlab_count`](#geom_barlab_count)
           - [Test it out](#test-it-out)
-          - [geom\_barlab\_count\_percent](#geom_barlab_count_percent)
+          - [`geom_barlab_count_percent`](#geom_barlab_count_percent)
           - [Try it out](#try-it-out)
-      - [Furthermore, a different set of thematic and scale defaults
-        make sense for labeled bar charts via `defaults_ggbarlabs()` and
-        `ggbarlabs()`](#furthermore-a-different-set-of-thematic-and-scale-defaults-make-sense-for-labeled-bar-charts-via-defaults_ggbarlabs-and-ggbarlabs)
-  - [let’s put all of this in `defaults_ggbarlabs` and
-    `ggbarlabs()`](#lets-put-all-of-this-in-defaults_ggbarlabs-and-ggbarlabs)
+  - [Furthermore, what if our start point isn’t `ggplot()` but
+    `ggbarlabs()` with a different set of thematic and scale defaults.
+    Alternatively add
+    `defaults_ggbarlabs()`](#furthermore-what-if-our-start-point-isnt-ggplot-but-ggbarlabs-with-a-different-set-of-thematic-and-scale-defaults-alternatively-add-defaults_ggbarlabs)
+      - [Build `defaults_ggbarlabs` and
+        `ggbarlabs()`](#build-defaults_ggbarlabs-and-ggbarlabs)
       - [try it out](#try-it-out-1)
-      - [Issues](#issues)
-          - [percents is calculated within panel. We might want to
-            specify the ‘whole’ from which percentage is
-            calculated.](#percents-is-calculated-within-panel-we-might-want-to-specify-the-whole-from-which-percentage-is-calculated)
-      - [Additional issues features to
-        consider](#additional-issues-features-to-consider)
+  - [Issues/features lacking](#issuesfeatures-lacking)
   - [Packaging and documentation](#packaging-and-documentation)
       - [how does DESCRIPTION file look? Have you worked on
         it?](#how-does-description-file-look-have-you-worked-on-it)
@@ -87,7 +81,7 @@ vizualization with all the specificity of a data table.
 
 ### or use verbose after\_stat…
 
-### first inspecting bar layer (stat\_count)
+#### first inspecting bar layer (stat\_count)
 
 ``` r
 layer_data(last_plot(), 1)
@@ -99,7 +93,7 @@ layer_data(last_plot(), 1)
 #> 2       0.5        1    NA
 ```
 
-### then plot
+#### then plot
 
 using our knowledge of what data frame results when using StatCount,
 refer to the computed var, count
@@ -149,7 +143,7 @@ layer_data(last_plot(), 2)
 #> 2     0   0.5  -0.5    NA               1        0.8
 ```
 
-# What if… {ggbarlabs}\!
+# What if… {ggbarlabs} w/ `geom_barlab_count`\!
 
 ## Proposed User interface
 
@@ -167,7 +161,7 @@ ggplot(mtcars) +
 
 ## Composing functions to this end
 
-### geom\_barlab\_count
+### `geom_barlab_count`
 
 🤔 🚧 likely rewrite, creating new ggproto stat, maybe using
 StatCount$compute as start point. This might resolve y label issue which
@@ -227,7 +221,7 @@ last_plot() +
 
 <img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
 
-### geom\_barlab\_count\_percent
+### `geom_barlab_count_percent`
 
 🤔 🚧 likely rewrite creating new ggproto stat object. Hopefully this
 would allow greater customizability in terms of defining denominator
@@ -287,7 +281,7 @@ last_plot() +
 
 <img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
 
-## Furthermore, a different set of thematic and scale defaults make sense for labeled bar charts via `defaults_ggbarlabs()` and `ggbarlabs()`
+# Furthermore, what if our start point isn’t `ggplot()` but `ggbarlabs()` with a different set of thematic and scale defaults. Alternatively add `defaults_ggbarlabs()`
 
 🤔 🚧 Consult with some people that think more about these choices and
 also who program more with ggplot2::theme()
@@ -317,7 +311,7 @@ ggplot(mtcars) +
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" />
 
-# let’s put all of this in `defaults_ggbarlabs` and `ggbarlabs()`
+## Build `defaults_ggbarlabs` and `ggbarlabs()`
 
 🤔 🚧 Is `defaults_ggbarlabs` a good name? is providing a different start
 point, like `ggbarlabs()`, a good idea? Are there things that need to be
@@ -374,12 +368,10 @@ ggbarlabs(mtcars) +
 
 <img src="man/figures/README-unnamed-chunk-12-2.png" width="50%" />
 
-## Issues
+# Issues/features lacking
 
-### percents is calculated within panel. We might want to specify the ‘whole’ from which percentage is calculated.
-
-## Additional issues features to consider
-
+  - percents is calculated within panel. We might want to specify the
+    ‘whole’ from which percentage is calculated.
   - Horizontal bars
   - stacked barchart support (seems trickier, esp when bars are short)
   - labels within bars… (trickier - when bars are short)
@@ -475,7 +467,7 @@ devtools::check(pkg = ".")
 #> • _R_CHECK_PACKAGES_USED_IGNORE_UNUSED_IMPORTS_: FALSE
 #> • NOT_CRAN                                     : true
 #> ── R CMD check ─────────────────────────────────────────────────────────────────
-#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpsXZZyr/file492677c02508/ggbarlabs.Rcheck’
+#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpbDexbL/file4ec4f61436/ggbarlabs.Rcheck’
 #> * using R version 4.2.2 (2022-10-31)
 #> * using platform: x86_64-apple-darwin17.0 (64-bit)
 #> * using session charset: UTF-8
@@ -556,12 +548,13 @@ devtools::check(pkg = ".")
 #> * checking for non-standard things in the check directory ... OK
 #> * checking for detritus in the temp directory ... OK
 #> * DONE
+#> 
 #> Status: 4 WARNINGs, 1 NOTE
 #> See
-#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpsXZZyr/file492677c02508/ggbarlabs.Rcheck/00check.log’
+#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpbDexbL/file4ec4f61436/ggbarlabs.Rcheck/00check.log’
 #> for details.
 #> ── R CMD check results ─────────────────────────────── ggbarlabs 0.0.0.9000 ────
-#> Duration: 23.1s
+#> Duration: 20.6s
 #> 
 #> ❯ checking DESCRIPTION meta-information ... WARNING
 #>   Non-standard license specification:
