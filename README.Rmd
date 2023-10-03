@@ -250,8 +250,9 @@ last_plot() +
 ```
 
 
-# Furthermore, what if our start point isn't `ggplot()` but `ggbarlabs()` with a different set of thematic and scale defaults. Alternatively add `defaults_ggbarlabs()`
+# `ggbarlabs()` instead of `ggplot()` 
 
+What if we start with a different set of thematic and scale defaults. And/or use `+ defaults_ggbarlabs()` to respecify defaults.
 
 🤔 🚧 Consult with some people that think more about these choices and also who program more with ggplot2::theme()
 

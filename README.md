@@ -18,10 +18,7 @@
           - [Test it out](#test-it-out)
           - [`geom_barlab_count_percent`](#geom_barlab_count_percent)
           - [Try it out](#try-it-out)
-  - [Furthermore, what if our start point isn’t `ggplot()` but
-    `ggbarlabs()` with a different set of thematic and scale defaults.
-    Alternatively add
-    `defaults_ggbarlabs()`](#furthermore-what-if-our-start-point-isnt-ggplot-but-ggbarlabs-with-a-different-set-of-thematic-and-scale-defaults-alternatively-add-defaults_ggbarlabs)
+  - [`ggbarlabs()` instead of `ggplot()`](#ggbarlabs-instead-of-ggplot)
       - [Build `defaults_ggbarlabs` and
         `ggbarlabs()`](#build-defaults_ggbarlabs-and-ggbarlabs)
       - [try it out](#try-it-out-1)
@@ -281,7 +278,10 @@ last_plot() +
 
 <img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
 
-# Furthermore, what if our start point isn’t `ggplot()` but `ggbarlabs()` with a different set of thematic and scale defaults. Alternatively add `defaults_ggbarlabs()`
+# `ggbarlabs()` instead of `ggplot()`
+
+What if we start with a different set of thematic and scale defaults.
+And/or use `+ defaults_ggbarlabs()` to respecify defaults.
 
 🤔 🚧 Consult with some people that think more about these choices and
 also who program more with ggplot2::theme()
@@ -467,7 +467,7 @@ devtools::check(pkg = ".")
 #> • _R_CHECK_PACKAGES_USED_IGNORE_UNUSED_IMPORTS_: FALSE
 #> • NOT_CRAN                                     : true
 #> ── R CMD check ─────────────────────────────────────────────────────────────────
-#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpbDexbL/file4ec4f61436/ggbarlabs.Rcheck’
+#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpuLVInu/file502e104f29b2/ggbarlabs.Rcheck’
 #> * using R version 4.2.2 (2022-10-31)
 #> * using platform: x86_64-apple-darwin17.0 (64-bit)
 #> * using session charset: UTF-8
@@ -551,10 +551,11 @@ devtools::check(pkg = ".")
 #> 
 #> Status: 4 WARNINGs, 1 NOTE
 #> See
-#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpbDexbL/file4ec4f61436/ggbarlabs.Rcheck/00check.log’
+#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpuLVInu/file502e104f29b2/ggbarlabs.Rcheck/00check.log’
 #> for details.
+#> 
 #> ── R CMD check results ─────────────────────────────── ggbarlabs 0.0.0.9000 ────
-#> Duration: 20.6s
+#> Duration: 21.9s
 #> 
 #> ❯ checking DESCRIPTION meta-information ... WARNING
 #>   Non-standard license specification:
