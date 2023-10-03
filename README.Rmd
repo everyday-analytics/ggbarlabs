@@ -16,23 +16,11 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r, echo = F, cache = T}
+```{r, echo = F, eval = F}
 library(ggplot2)
 library(ggstamp)
-library(magick)
-"https://images.unsplash.com/photo-1618214694290-04e1c31a59ab?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=889&q=80" %>% 
-  magick::image_read() %>%
-  # magick::image_flop() %>% 
-  magick::image_emboss() %>% 
-  magick::image_write(format = "png", quality = 100) ->
-bullet_png
 
-ggcanvas() +
-  stamp_png(png = bullet_png, width = 3.5, 
-            x0= -.75) +
-  stamp_polygon_holes(x0y0 = pos_honeycomb(n = 2500, ncol = 50, width = .05,
-   x0 = -1, y0 = 1), fill = "oldlace", radius = .024,
-   alpha = .4) +
+ggbarlabs() +
   stamp_polygon_inverse(radius_outer = Inf) +
   stamp_polygon(color = "darkred", 
                 fill = "lightgoldenrod1",
@@ -48,14 +36,14 @@ ggcanvas() +
   #             ) + 
   stamp_text(#y = .35, x = -.25, 
     x = -.3, y = -.34,
-             label = "ggdirect", 
+             label = "ggbarlabs", 
              size = 12, 
              color = "dodgerblue4",
              vjust = 0) +
   theme_void()
 ```
 
-# ggdirect (likely to be superceded by ggbarlabs)
+# ggbarlabs
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -78,7 +66,7 @@ p <- last_plot()
 
 ## bar plots can benefit from specificity of labeling
 
-Labeled bar chart is all the fast communication of traditional data vizualization with all the specificity of a table.
+Labeled bar chart is all the fast communication of traditional data vizualization with all the specificity of a data table.
 
 ```{r}
 
@@ -133,14 +121,12 @@ p +
 layer_data(last_plot(), 2)
 ```
 
-## Proposed User interface
+
+
+## What if... ggbarlabs Proposed User interface
 
 
 ```{r, eval = F}
-ggplot(mtcars) + 
-  aes(x = am) + 
-  geom_bar() 
-
 ggplot(mtcars) + 
   aes(x = am) + 
   geom_bar() + 
@@ -150,8 +136,6 @@ ggplot(mtcars) +
   aes(x = am) + 
   geom_bar() + 
   geom_text_count_percent()
-
-
 ```
 
 
@@ -172,11 +156,6 @@ ggplot(mtcars) +
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' ggplot(mtcars) +
-#'    aes(x = cyl) +
-#'    geom_bar() +
-#'    geom_text_count(nudge_y = .5)
 geom_text_count <- function(nudge_y = 0, position =
                               ggplot2::position_dodge2(width = .9,
                                                        preserve = "single"), ...){
@@ -193,7 +172,7 @@ geom_text_count <- function(nudge_y = 0, position =
 ```
 
 
-### Try it out
+### Test it out
 
 ```{r}
 library(ggplot2)
@@ -224,11 +203,6 @@ last_plot() +
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' ggplot(mtcars) +
-#'     aes(x = cyl) +
-#'     geom_bar() +
-#'     geom_text_count_percent(nudge_y = .5)
 geom_text_count_percent <- function(nudge_y = 0,
                                     lineheight = .85,
                                     position = ggplot2::position_dodge2(width = .9,
@@ -290,13 +264,14 @@ ggplot(mtcars) +
   scale_y_continuous(expand = expansion(mult = c(0, .1)))
 ```
 
-# lets put all of this in `ggbarlabs()`
+# lets put all of this in `defaults_ggbarlabs` and `ggbarlabs()`
 
 
 ```{r}
-ggbarlabs <- function(data = NULL, ...){
-  ggplot(data= data , ... ) +
-  theme_classic(base_size = 15) +
+defaults_ggbarlabs <- function(){
+  
+  list(
+  theme_classic(base_size = 15) ,
   theme(axis.line.y = element_blank(),
         axis.text.y.right = element_blank(),
         axis.ticks.y = element_blank(),
@@ -307,20 +282,27 @@ ggbarlabs <- function(data = NULL, ...){
         panel.grid.minor.x = element_blank(),
         axis.line.x = element_line(colour = "gray35"),
         legend.position = "top",
-        legend.justification = 0) +
-  scale_y_continuous(expand = expansion(mult = c(0, .15)))
+        legend.justification = 0) ,
+  scale_y_continuous(expand = expansion(mult = c(0, .15))))
+}
+
+
+ggbarlabs <- function(data = NULL, ...){
+  ggplot(data= data , ... ) +
+  defaults_ggbarlabs()
 }
 ```
 
 ## try it out
 
 ```{r}
-ggbarlabs(mtcars) + 
+ggplot(mtcars) + 
   aes(x = factor(am)) + 
   geom_bar(fill = alpha("navy", .9)) + 
-  geom_text_count_percent()
+  geom_text_count_percent() + 
+  defaults_ggbarlabs()
 
-
+# or
 ggbarlabs(mtcars) + 
   aes(x = factor(am), fill = factor(cyl)) + 
   geom_bar(position = "dodge") + 

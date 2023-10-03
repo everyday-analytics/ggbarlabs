@@ -1,6 +1,5 @@
 
-  - [ggdirect (likely to be superceded by
-    ggbarlabs)](#ggdirect-likely-to-be-superceded-by-ggbarlabs)
+  - [ggbarlabs](#ggbarlabs)
   - [Problem:](#problem)
       - [bar charts are ubiquitous and can quickly communicate
         information.](#bar-charts-are-ubiquitous-and-can-quickly-communicate-information)
@@ -11,18 +10,19 @@
           - [first inspecting bar layer
             (stat\_count)](#first-inspecting-bar-layer-stat_count)
           - [then plot](#then-plot)
-      - [Proposed User interface](#proposed-user-interface)
+      - [What if… ggbarlabs Proposed User
+        interface](#what-if-ggbarlabs-proposed-user-interface)
       - [Composing functions](#composing-functions)
           - [geom\_text\_count](#geom_text_count)
-          - [Try it out](#try-it-out)
+          - [Test it out](#test-it-out)
           - [geom\_text\_count\_percent](#geom_text_count_percent)
-          - [Try it out](#try-it-out-1)
+          - [Try it out](#try-it-out)
   - [Furthermore, a different set of thematic and scale defaults make
     sense for labeled bar
     charts](#furthermore-a-different-set-of-thematic-and-scale-defaults-make-sense-for-labeled-bar-charts)
-  - [lets put all of this in
-    `ggbarlabs()`](#lets-put-all-of-this-in-ggbarlabs)
-      - [try it out](#try-it-out-2)
+  - [lets put all of this in `defaults_ggbarlabs` and
+    `ggbarlabs()`](#lets-put-all-of-this-in-defaults_ggbarlabs-and-ggbarlabs)
+      - [try it out](#try-it-out-1)
       - [Issues](#issues)
           - [vjust may give us better results than
             nudge\_y…](#vjust-may-give-us-better-results-than-nudge_y)
@@ -34,9 +34,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="50%" />
-
-# ggdirect (likely to be superceded by ggbarlabs)
+# ggbarlabs
 
 <!-- badges: start -->
 
@@ -64,7 +62,7 @@ p <- last_plot()
 ## bar plots can benefit from specificity of labeling
 
 Labeled bar chart is all the fast communication of traditional data
-vizualization with all the specificity of a table.
+vizualization with all the specificity of a data table.
 
 ## but its a pain
 
@@ -134,13 +132,9 @@ layer_data(last_plot(), 2)
 #> 2     0   0.5  -0.5    NA               1        0.8
 ```
 
-## Proposed User interface
+## What if… ggbarlabs Proposed User interface
 
 ``` r
-ggplot(mtcars) + 
-  aes(x = am) + 
-  geom_bar() 
-
 ggplot(mtcars) + 
   aes(x = am) + 
   geom_bar() + 
@@ -168,11 +162,6 @@ ggplot(mtcars) +
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' ggplot(mtcars) +
-#'    aes(x = cyl) +
-#'    geom_bar() +
-#'    geom_text_count(nudge_y = .5)
 geom_text_count <- function(nudge_y = 0, position =
                               ggplot2::position_dodge2(width = .9,
                                                        preserve = "single"), ...){
@@ -188,7 +177,7 @@ geom_text_count <- function(nudge_y = 0, position =
 }
 ```
 
-### Try it out
+### Test it out
 
 ``` r
 library(ggplot2)
@@ -225,11 +214,6 @@ last_plot() +
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' ggplot(mtcars) +
-#'     aes(x = cyl) +
-#'     geom_bar() +
-#'     geom_text_count_percent(nudge_y = .5)
 geom_text_count_percent <- function(nudge_y = 0,
                                     lineheight = .85,
                                     position = ggplot2::position_dodge2(width = .9,
@@ -302,12 +286,13 @@ ggplot(mtcars) +
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="50%" />
 
-# lets put all of this in `ggbarlabs()`
+# lets put all of this in `defaults_ggbarlabs` and `ggbarlabs()`
 
 ``` r
-ggbarlabs <- function(data = NULL, ...){
-  ggplot(data= data , ... ) +
-  theme_classic(base_size = 15) +
+defaults_ggbarlabs <- function(){
+  
+  list(
+  theme_classic(base_size = 15) ,
   theme(axis.line.y = element_blank(),
         axis.text.y.right = element_blank(),
         axis.ticks.y = element_blank(),
@@ -318,25 +303,32 @@ ggbarlabs <- function(data = NULL, ...){
         panel.grid.minor.x = element_blank(),
         axis.line.x = element_line(colour = "gray35"),
         legend.position = "top",
-        legend.justification = 0) +
-  scale_y_continuous(expand = expansion(mult = c(0, .15)))
+        legend.justification = 0) ,
+  scale_y_continuous(expand = expansion(mult = c(0, .15))))
+}
+
+
+ggbarlabs <- function(data = NULL, ...){
+  ggplot(data= data , ... ) +
+  defaults_ggbarlabs()
 }
 ```
 
 ## try it out
 
 ``` r
-ggbarlabs(mtcars) + 
+ggplot(mtcars) + 
   aes(x = factor(am)) + 
   geom_bar(fill = alpha("navy", .9)) + 
-  geom_text_count_percent()
+  geom_text_count_percent() + 
+  defaults_ggbarlabs()
 ```
 
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="50%" />
 
 ``` r
 
-
+# or
 ggbarlabs(mtcars) + 
   aes(x = factor(am), fill = factor(cyl)) + 
   geom_bar(position = "dodge") + 
