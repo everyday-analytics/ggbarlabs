@@ -11,7 +11,11 @@ geom_barlab_count(
 )
 }
 \arguments{
-\item{...}{}
+\item{vjust}{vertical justification, either a string (“top”, “middle”, “bottom”, “left”, “center”, “right”) or a number between 0 and 1; you can use numbers outside the range (0, 1), but it’s not recommended.}
+
+\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function. Cannot be jointly specified with nudge_x or nudge_y}
+
+\item{...}{Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or size = 3. They may also be parameters to the paired geom/stat.}
 }
 \description{
 Add label which is the count.  Acts like geom_bar() but text label at the position of the top of the bar.

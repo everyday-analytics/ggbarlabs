@@ -124,7 +124,7 @@ layer_data(last_plot(), 2)
 
 
 
-# What if... {ggbarlabs} w/ `geom_barlab_count`! 
+# What if...`ggbarlabs::geom_barlab_count()`! 
 
 ## Proposed User interface
 
@@ -144,21 +144,23 @@ ggplot(mtcars) +
 
 ## Composing functions to this end
 
-### `geom_barlab_count`
+### `geom_barlab_count()`
 
 🤔 🚧 likely rewrite, creating new ggproto stat, maybe using StatCount$compute as start point.  This might resolve y label issue which currently quotes 'after_stat()'.  See test below.  
 
 June Choe, authored the first round ggdirect::geom_text_count and ggdirect::geom_text_count_percent, which proved super useful.  
 
- 🚧 Main change below is to use vjust for y adjustment rather than nudge_y strategy... Any reason to go back?
+ 🚧 Main change below is to use vjust for y adjustment rather than nudge_y strategy... Any reason to go back? 'you can use numbers outside the range (0, 1), but it's not recommended.'
+ 
+ 
 
 ```{r geom_barlab_count}
 #' geom_text_count
 #' @description Add label which is the count.  Acts like geom_bar() but text label at the position of the top of the bar.
 #'
-#' @param vjust
-#' @param position
-#' @param ...
+#' @param vjust vertical justification, either a string (“top”, “middle”, “bottom”, “left”, “center”, “right”) or a number between 0 and 1; you can use numbers outside the range (0, 1), but it’s not recommended.
+#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function. Cannot be jointly specified with nudge_x or nudge_y
+#' @param ... Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or size = 3. They may also be parameters to the paired geom/stat.
 #'
 #' @return
 #' @export
@@ -204,10 +206,10 @@ last_plot() +
 #' geom_barlab_count_percent
 #' @description Add label which is the count as well as percentage.  Acts like geom_bar() but text label at the position of the top of the bar.  Percentage is calculated within facet panels.
 #'
-#' @param vjust
-#' @param lineheight
-#' @param position
-#' @param ...
+#' @param vjust vertical justification, either a string (“top”, “middle”, “bottom”, “left”, “center”, “right”) or a number between 0 and 1; you can use numbers outside the range (0, 1), but it’s not recommended.
+#' @param lineheight single to double spacing is the idea here
+#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function. Cannot be jointly specified with nudge_x or nudge_y
+#' @param ... Other arguments passed on to layer(). These are often aesthetics, used to set an aesthetic to a fixed value, like colour = "red" or size = 3. They may also be parameters to the paired geom/stat.
 #'
 #' @return
 #' @export
@@ -218,14 +220,14 @@ geom_barlab_count_percent <- function(vjust = -0.1,
                                     position = ggplot2::position_dodge2(width = .9,
                                                                preserve = "single"), ...){
 
-  stat_count(geom = "text",
-             ggplot2::aes(label = paste0(after_stat(count), "\n(",
+  ggplot2::stat_count(geom = "text",
+             ggplot2::aes(label = paste0(ggplot2::after_stat(count), "\n(",
 
                                 round(
                                   100*(ggplot2::after_stat(count))/
                                     tapply(ggplot2::after_stat(count),
-                                           after_stat(PANEL),
-                                           sum)[after_stat(PANEL)],
+                                           ggplot2::after_stat(PANEL),
+                                           sum)[ggplot2::after_stat(PANEL)],
                                   1), "%)" )),
              vjust = vjust,
              lineheight = lineheight,
@@ -337,7 +339,9 @@ ggbarlabs(mtcars) +
 - stacked barchart support (seems trickier, esp when bars are short)
 - labels within bars... (trickier - when bars are short)
 
-# Packaging and documentation 
+# Packaging and documentation
+
+- `devtools::create("./ggbarlabs")`
 
 
 ## how does DESCRIPTION file look?  Have you worked on it? 
@@ -357,13 +361,21 @@ chunk_to_r("geom_barlab_count")
 chunk_to_r("geom_barlab_count_percent")
 ```
 
+## have you added roxygen skeleton for auto documentation?
+
+Yes!
+
+## have you put examples in roxygen skeleton?
+
+🚧 No.😬🤭
+
 ## have you written any formal tests?
 
-🚧 No! 
+🚧 No.😬🤭
 
-## Send tests in this readme to package
+## If yes to above, send tests in this readme to package via readme2pkg
 
-That would look like this
+That would look like this...
 
 ```
 chunk_to_tests_testthat("test_geom_barlab_count")
@@ -372,14 +384,20 @@ chunk_to_tests_testthat("test_geom_barlab_count")
 
 ## have you created a package website?
 
-🚧 No! 
+🚧 No.🤭😬
 
 
 ## Run check and capture errors, warnings, notes
 
-🚧 🚧 🚧 🚧 🚧 🚧 🚧  Clearly lots to do. 
+🚧 🚧 🚧 🚧 🚧 🚧 🚧  Clearly lots to do.🤭🤭🤭😬
+
+```{r, eval = F}
+usethis::use_package("ggplot2")
+usethis::use_mit_license()
+```
 
 ```{r, error = T}
+rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
 devtools::check(pkg = ".")
 ```
 
