@@ -332,15 +332,20 @@ ggbarlabs(mtcars) +
 
 
 
-## Reflect. Acknowledge short comings, doubts, other good and pertanante work
+## Reflect. Acknowledge short comings, doubts, other good and pertanent work
 
 - percents is calculated within panel.  We might want to specify the 'whole' from which percentage is calculated.
 - Horizontal bars
 - stacked barchart support (seems trickier, esp when bars are short)
 - labels within bars... (trickier - when bars are short)
 
-# Part 2. Packaging and documentation 
-checklist 🚧 ✅ 
+
+
+# Part 2. Packaging and documentation  🚧 ✅ 
+
+```{r}
+knitr::knit_exit()
+```
 
 ## minimal requirements for github package.  Have you:
 
