@@ -59,7 +59,7 @@ library(ggplot2)
 theme_set(theme_gray(18))
 ggplot(mtcars) + 
   aes(x = am) + 
-  geom_bar() 
+  geom_bar(position = "dodge") 
 
 p <- last_plot()
 
@@ -109,17 +109,28 @@ p +
 
 p + 
   geom_text(stat = StatCount, 
-            aes(label = after_stat(
-              paste0(round(100*count/sum(count), 1) ,"%")
-              )), 
+            aes(label = paste0(round(100*after_stat(prop), 1) ,"%")), 
             vjust = -.7)
 
 p + 
   geom_text(stat = StatCount, 
             aes(label = after_stat(
-              paste0(count,"\n(",round(100*count/sum(count), 1) ,"%)")
+              paste0(count,"\n(",round(100*after_stat(prop), 1) ,"%)")
               )), 
             vjust = -.5, lineheight = .8)
+
+
+last_plot() + 
+  facet_grid(~cyl)
+
+p + 
+  geom_text(stat = StatCount, 
+            aes(label = after_stat(
+              paste0(count,"\n(",round(100*after_stat(prop), 1) ,"%)")
+              )), 
+            vjust = -.5, lineheight = .8, position = position_dodge2()) + 
+  facet_grid(~cyl) + 
+  aes(fill = factor(vs))
 
 layer_data(last_plot(), 2)
 ```

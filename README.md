@@ -45,7 +45,7 @@ library(ggplot2)
 theme_set(theme_gray(18))
 ggplot(mtcars) + 
   aes(x = am) + 
-  geom_bar() 
+  geom_bar(position = "dodge") 
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="50%" />
@@ -99,9 +99,7 @@ p +
 
 p + 
   geom_text(stat = StatCount, 
-            aes(label = after_stat(
-              paste0(round(100*count/sum(count), 1) ,"%")
-              )), 
+            aes(label = paste0(round(100*after_stat(prop), 1) ,"%")), 
             vjust = -.7)
 ```
 
@@ -112,7 +110,7 @@ p +
 p + 
   geom_text(stat = StatCount, 
             aes(label = after_stat(
-              paste0(count,"\n(",round(100*count/sum(count), 1) ,"%)")
+              paste0(count,"\n(",round(100*after_stat(prop), 1) ,"%)")
               )), 
             vjust = -.5, lineheight = .8)
 ```
@@ -121,13 +119,56 @@ p +
 
 ``` r
 
+
+last_plot() + 
+  facet_grid(~cyl)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-4.png" width="50%" />
+
+``` r
+
+p + 
+  geom_text(stat = StatCount, 
+            aes(label = after_stat(
+              paste0(count,"\n(",round(100*after_stat(prop), 1) ,"%)")
+              )), 
+            vjust = -.5, lineheight = .8, position = position_dodge2()) + 
+  facet_grid(~cyl) + 
+  aes(fill = factor(vs))
+#> Warning: Width not defined. Set with `position_dodge2(width = ...)`
+```
+
+<img src="man/figures/README-unnamed-chunk-7-5.png" width="50%" />
+
+``` r
+
 layer_data(last_plot(), 2)
-#>         label  y count    prop x width flipped_aes PANEL group colour size
-#> 1 19\n(59.4%) 19    19 0.59375 0   0.9       FALSE     1    -1  black 3.88
-#> 2 13\n(40.6%) 13    13 0.40625 1   0.9       FALSE     1    -1  black 3.88
-#>   angle hjust vjust alpha family fontface lineheight
-#> 1     0   0.5  -0.5    NA               1        0.8
-#> 2     0   0.5  -0.5    NA               1        0.8
+#> Warning: Width not defined. Set with `position_dodge2(width = ...)`
+#>      fill       label  y count      prop x width flipped_aes PANEL group xmin
+#> 1 #00BFC4    3\n(30%)  3     3 0.3000000 0   0.9       FALSE     1     2    0
+#> 2 #F8766D   1\n(100%)  1     1 1.0000000 1   0.9       FALSE     1     1    1
+#> 3 #00BFC4    7\n(70%)  7     7 0.7000000 1   0.9       FALSE     1     2    1
+#> 4 #00BFC4   4\n(100%)  4     4 1.0000000 0   0.9       FALSE     2     2    0
+#> 5 #F8766D   3\n(100%)  3     3 1.0000000 1   0.9       FALSE     2     1    1
+#> 6 #F8766D 12\n(85.7%) 12    12 0.8571429 0   0.9       FALSE     3     1    0
+#> 7 #F8766D  2\n(14.3%)  2     2 0.1428571 1   0.9       FALSE     3     1    1
+#>   xmax xid newx new_width colour size angle hjust vjust alpha family fontface
+#> 1    0   1    0         0  black 3.88     0   0.5  -0.5    NA               1
+#> 2    1   2    1         0  black 3.88     0   0.5  -0.5    NA               1
+#> 3    1   3    1         0  black 3.88     0   0.5  -0.5    NA               1
+#> 4    0   1    0         0  black 3.88     0   0.5  -0.5    NA               1
+#> 5    1   2    1         0  black 3.88     0   0.5  -0.5    NA               1
+#> 6    0   1    0         0  black 3.88     0   0.5  -0.5    NA               1
+#> 7    1   2    1         0  black 3.88     0   0.5  -0.5    NA               1
+#>   lineheight
+#> 1        0.8
+#> 2        0.8
+#> 3        0.8
+#> 4        0.8
+#> 5        0.8
+#> 6        0.8
+#> 7        0.8
 ```
 
 ## What if…`ggbarlabs::geom_barlab_count()`\!
