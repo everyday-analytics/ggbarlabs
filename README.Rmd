@@ -48,9 +48,11 @@ ggbarlabs() +
 <!-- badges: start -->
 <!-- badges: end -->
 
-# Problem: 
+# Part 1. Addressing a problem with new functionality
 
-## bar charts are ubiquitous and can quickly communicate information...
+## Describing problem
+
+### bar charts are ubiquitous and can quickly communicate information...
 
 ```{r}
 library(ggplot2)
@@ -64,7 +66,7 @@ p <- last_plot()
 ```
 
 
-## ... and bar plots can benefit from specificity of labeling ...
+### ... and bar plots can benefit from specificity of labeling ...
 
 Labeled bar chart is all the fast communication of traditional data vizualization with all the specificity of a data table.
 
@@ -75,9 +77,9 @@ Labeled bar chart is all the fast communication of traditional data vizualizatio
 ```
 
 
-## ... but its a pain 
+### ... but its a pain 
 
-### either precalc and use geom_col + geom_text
+#### either precalc and use geom_col + geom_text
 
 🤔 🚧 I'm too lazy to even provide an example.
 
@@ -86,15 +88,15 @@ Labeled bar chart is all the fast communication of traditional data vizualizatio
 
 ```
 
-###  or use verbose after_stat...
+####  or use verbose after_stat...
 
-#### first inspecting bar layer (stat_count)
+##### first inspecting bar layer (stat_count)
 
 ```{r}
 layer_data(last_plot(), 1)
 ```
 
-#### then plot
+##### then plot
 
 using our knowledge of what data frame results when using StatCount, refer to the computed var, count
 
@@ -124,9 +126,9 @@ layer_data(last_plot(), 2)
 
 
 
-# What if...`ggbarlabs::geom_barlab_count()`! 
+## What if...`ggbarlabs::geom_barlab_count()`! 
 
-## Proposed User interface
+### Proposed User interface
 
 
 ```{r, eval = F}
@@ -181,7 +183,7 @@ geom_barlab_count <- function(vjust = -0.15, position =
 ```
 
 
-### Test it out
+#### Test it out
 
 🤔 🚧 Think about a new example, numeric as categories feels awkward
 
@@ -238,7 +240,7 @@ geom_barlab_count_percent <- function(vjust = -0.1,
 ```
 
 
-### Try it out
+#### Try it out
 
 ```{r}
 library(ggplot2)
@@ -252,7 +254,7 @@ last_plot() +
 ```
 
 
-# `ggbarlabs()` instead of `ggplot()` 
+## Complementary functionality `ggbarlabs()`
 
 What if we start with a different set of thematic and scale defaults. And/or use `+ defaults_ggbarlabs()` to respecify defaults.
 
@@ -284,8 +286,6 @@ ggplot(mtcars) +
 
 🤔 🚧 Is `defaults_ggbarlabs` a good name?   is providing a different start point, like `ggbarlabs()`, a good idea? Are there things that need to be changed about implementation?  While we are here, should we think about changing default color pallets?  
 
-
-
 ```{r defaults_ggbarlabs}
 defaults_ggbarlabs <- function(){
   
@@ -313,7 +313,7 @@ ggbarlabs <- function(data = NULL, ...){
 }
 ```
 
-## try it out
+#### try it out
 
 ```{r}
 ggplot(mtcars) + 
@@ -332,24 +332,21 @@ ggbarlabs(mtcars) +
 
 
 
-# Issues/features lacking
+## Reflect. Acknowledge short comings, doubts, other good and pertanante work
 
 - percents is calculated within panel.  We might want to specify the 'whole' from which percentage is calculated.
 - Horizontal bars
 - stacked barchart support (seems trickier, esp when bars are short)
 - labels within bars... (trickier - when bars are short)
 
-# Packaging and documentation
+# Part 2. Packaging and documentation 
+checklist 🚧 ✅ 
 
-- `devtools::create("./ggbarlabs")`
+## minimal requirements for github package.  Have you:
 
+### Created files for package archetecture with `devtools::create("./ggbarlabs")` ✅ 
 
-## how does DESCRIPTION file look?  Have you worked on it? 
-
-🚧 No! 
-
-
-## Send functions composed in this readme to the package R folder w/ chunk names
+### Moved functions R folder? ✅  
 
 ```{r}
 knitr::knit_code$get() |> names()
@@ -361,44 +358,92 @@ chunk_to_r("geom_barlab_count")
 chunk_to_r("geom_barlab_count_percent")
 ```
 
-## have you added roxygen skeleton for auto documentation?
 
-Yes!
+### Added roxygen skeleton? ✅ 
 
-## have you put examples in roxygen skeleton?
+ for auto documentation and making sure proposed functions are *exported*
 
-🚧 No.😬🤭
+### Managed dependencies ? ✅ 
 
-## have you written any formal tests?
+package dependancies managed, i.e. `depend::function()` in proposed functions and declared in the DESCRIPTION
 
-🚧 No.😬🤭
+### Chosen a license? ✅ 
 
-## If yes to above, send tests in this readme to package via readme2pkg
-
-That would look like this...
-
-```
-chunk_to_tests_testthat("test_geom_barlab_count")
-
-```
-
-## have you created a package website?
-
-🚧 No.🤭😬
-
-
-## Run check and capture errors, warnings, notes
-
-🚧 🚧 🚧 🚧 🚧 🚧 🚧  Clearly lots to do.🤭🤭🤭😬
 
 ```{r, eval = F}
 usethis::use_package("ggplot2")
 usethis::use_mit_license()
 ```
 
+### Run `devtools::check()` and addressed errors? ✅ 
+
+
+## Listen 🚧 
+
+### Consulted with potential users 🚧 
+### Consulted with technical experts 
+
+Getting started with that!
+
+## Polish.  Have you.
+
+### Settled on examples and put them in the roxygen skeleton? 🚧 
+
+### Written formal tests of functions? 🚧 
+
+
+### Sent tests in this readme to package via readme2pkg 🚧 
+
+That would look like this...
+
+```
+chunk_to_tests_testthat("test_geom_barlab_count")
+```
+
+
+### Have you worked added a description and author information in the DESCRIPTION file? 🚧 
+
+### Addressed *all* notes, warnings and errors. 🚧 
+
+## Promote
+
+### Package website built? 🚧 
+
+### Package website deployed? 🚧 
+
+## Harden
+
+### Submit to CRAN?  🚧 
+
+
+# Reports, Environment
+
+## Description file extract
+
+```{r}
+
+```
+
+## Environment
+
+Here I just want to print the packages and the versions
+
+```{r}
+all <- sessionInfo() |> print() |> capture.output()
+all[11:17]
+
+
+```
+
+## `devtools::check()` report
+
 ```{r, error = T}
-rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
+# rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
 devtools::check(pkg = ".")
 ```
+
+
+
+
 
 

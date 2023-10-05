@@ -1,46 +1,67 @@
 
   - [ggbarlabs](#ggbarlabs)
-  - [Problem:](#problem)
-      - [bar charts are ubiquitous and can quickly communicate
-        information…](#bar-charts-are-ubiquitous-and-can-quickly-communicate-information)
-      - [… and bar plots can benefit from specificity of labeling
-        …](#-and-bar-plots-can-benefit-from-specificity-of-labeling-)
-      - [… but its a pain](#-but-its-a-pain)
-          - [either precalc and use geom\_col +
-            geom\_text](#either-precalc-and-use-geom_col--geom_text)
-          - [or use verbose after\_stat…](#or-use-verbose-after_stat)
-  - [What
-    if…`ggbarlabs::geom_barlab_count()`\!](#what-ifggbarlabsgeom_barlab_count)
-      - [Proposed User interface](#proposed-user-interface)
+  - [Part 1. Addressing a problem with new
+    functionality](#part-1-addressing-a-problem-with-new-functionality)
+      - [Describing problem](#describing-problem)
+          - [bar charts are ubiquitous and can quickly communicate
+            information…](#bar-charts-are-ubiquitous-and-can-quickly-communicate-information)
+          - [… and bar plots can benefit from specificity of labeling
+            …](#-and-bar-plots-can-benefit-from-specificity-of-labeling-)
+          - [… but its a pain](#-but-its-a-pain)
+      - [What
+        if…`ggbarlabs::geom_barlab_count()`\!](#what-ifggbarlabsgeom_barlab_count)
+          - [Proposed User interface](#proposed-user-interface)
       - [Composing functions to this
         end](#composing-functions-to-this-end)
           - [`geom_barlab_count()`](#geom_barlab_count)
-          - [Test it out](#test-it-out)
           - [`geom_barlab_count_percent`](#geom_barlab_count_percent)
-          - [Try it out](#try-it-out)
-  - [`ggbarlabs()` instead of `ggplot()`](#ggbarlabs-instead-of-ggplot)
+      - [Complementary functionality
+        `ggbarlabs()`](#complementary-functionality-ggbarlabs)
       - [Build `defaults_ggbarlabs` and
         `ggbarlabs()`](#build-defaults_ggbarlabs-and-ggbarlabs)
-      - [try it out](#try-it-out-1)
-  - [Issues/features lacking](#issuesfeatures-lacking)
-  - [Packaging and documentation](#packaging-and-documentation)
-      - [how does DESCRIPTION file look? Have you worked on
-        it?](#how-does-description-file-look-have-you-worked-on-it)
-      - [Send functions composed in this readme to the package R folder
-        w/ chunk
-        names](#send-functions-composed-in-this-readme-to-the-package-r-folder-w-chunk-names)
-      - [have you added roxygen skeleton for auto
-        documentation?](#have-you-added-roxygen-skeleton-for-auto-documentation)
-      - [have you put examples in roxygen
-        skeleton?](#have-you-put-examples-in-roxygen-skeleton)
-      - [have you written any formal
-        tests?](#have-you-written-any-formal-tests)
-      - [If yes to above, send tests in this readme to package via
-        readme2pkg](#if-yes-to-above-send-tests-in-this-readme-to-package-via-readme2pkg)
-      - [have you created a package
-        website?](#have-you-created-a-package-website)
-      - [Run check and capture errors, warnings,
-        notes](#run-check-and-capture-errors-warnings-notes)
+          - [try it out](#try-it-out-1)
+      - [Reflect. Acknowledge short comings, doubts, other good and
+        pertanante
+        work](#reflect-acknowledge-short-comings-doubts-other-good-and-pertanante-work)
+  - [Part 2. Packaging and
+    documentation](#part-2-packaging-and-documentation)
+      - [minimal requirements for github package. Have
+        you:](#minimal-requirements-for-github-package-have-you)
+          - [Created files for package archetecture with
+            `devtools::create("./ggbarlabs")`
+            ✅](#created-files-for-package-archetecture-with-devtoolscreateggbarlabs-)
+          - [Moved functions R folder? ✅](#moved-functions-r-folder-)
+          - [Added roxygen skeleton? ✅](#added-roxygen-skeleton-)
+          - [Managed dependencies ? ✅](#managed-dependencies--)
+          - [Chosen a license? ✅](#chosen-a-license-)
+          - [Run `devtools::check()` and addressed errors?
+            ✅](#run-devtoolscheck-and-addressed-errors-)
+      - [Listen 🚧](#listen-)
+          - [Consulted with potential users
+            🚧](#consulted-with-potential-users-)
+          - [Consulted with technical
+            experts](#consulted-with-technical-experts)
+      - [Polish. Have you.](#polish-have-you)
+          - [Settled on examples and put them in the roxygen skeleton?
+            🚧](#settled-on-examples-and-put-them-in-the-roxygen-skeleton-)
+          - [Written formal tests of functions?
+            🚧](#written-formal-tests-of-functions-)
+          - [Sent tests in this readme to package via readme2pkg
+            🚧](#sent-tests-in-this-readme-to-package-via-readme2pkg-)
+          - [Have you worked added a description and author information
+            in the DESCRIPTION file?
+            🚧](#have-you-worked-added-a-description-and-author-information-in-the-description-file-)
+          - [Addressed *all* notes, warnings and errors.
+            🚧](#addressed-all-notes-warnings-and-errors-)
+      - [Promote](#promote)
+          - [Package website built? 🚧](#package-website-built-)
+          - [Package website deployed? 🚧](#package-website-deployed-)
+      - [Harden](#harden)
+          - [Submit to CRAN? 🚧](#submit-to-cran-)
+  - [Reports, Environment](#reports-environment)
+      - [Description file extract](#description-file-extract)
+      - [Environment](#environment)
+      - [`devtools::check()` report](#devtoolscheck-report)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -50,9 +71,11 @@
 
 <!-- badges: end -->
 
-# Problem:
+# Part 1. Addressing a problem with new functionality
 
-## bar charts are ubiquitous and can quickly communicate information…
+## Describing problem
+
+### bar charts are ubiquitous and can quickly communicate information…
 
 ``` r
 library(ggplot2)
@@ -69,20 +92,20 @@ ggplot(mtcars) +
 p <- last_plot()
 ```
 
-## … and bar plots can benefit from specificity of labeling …
+### … and bar plots can benefit from specificity of labeling …
 
 Labeled bar chart is all the fast communication of traditional data
 vizualization with all the specificity of a data table.
 
-## … but its a pain
+### … but its a pain
 
-### either precalc and use geom\_col + geom\_text
+#### either precalc and use geom\_col + geom\_text
 
 🤔 🚧 I’m too lazy to even provide an example.
 
-### or use verbose after\_stat…
+#### or use verbose after\_stat…
 
-#### first inspecting bar layer (stat\_count)
+##### first inspecting bar layer (stat\_count)
 
 ``` r
 layer_data(last_plot(), 1)
@@ -94,7 +117,7 @@ layer_data(last_plot(), 1)
 #> 2       0.5        1    NA
 ```
 
-#### then plot
+##### then plot
 
 using our knowledge of what data frame results when using StatCount,
 refer to the computed var, count
@@ -144,9 +167,9 @@ layer_data(last_plot(), 2)
 #> 2     0   0.5  -0.5    NA               1        0.8
 ```
 
-# What if…`ggbarlabs::geom_barlab_count()`\!
+## What if…`ggbarlabs::geom_barlab_count()`\!
 
-## Proposed User interface
+### Proposed User interface
 
 ``` r
 ggplot(mtcars) + 
@@ -201,7 +224,7 @@ geom_barlab_count <- function(vjust = -0.15, position =
 }
 ```
 
-### Test it out
+#### Test it out
 
 🤔 🚧 Think about a new example, numeric as categories feels awkward
 
@@ -263,7 +286,7 @@ geom_barlab_count_percent <- function(vjust = -0.1,
 }
 ```
 
-### Try it out
+#### Try it out
 
 ``` r
 library(ggplot2)
@@ -283,7 +306,7 @@ last_plot() +
 
 <img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
 
-# `ggbarlabs()` instead of `ggplot()`
+## Complementary functionality `ggbarlabs()`
 
 What if we start with a different set of thematic and scale defaults.
 And/or use `+ defaults_ggbarlabs()` to respecify defaults.
@@ -350,7 +373,7 @@ ggbarlabs <- function(data = NULL, ...){
 }
 ```
 
-## try it out
+#### try it out
 
 ``` r
 ggplot(mtcars) + 
@@ -373,7 +396,7 @@ ggbarlabs(mtcars) +
 
 <img src="man/figures/README-unnamed-chunk-12-2.png" width="50%" />
 
-# Issues/features lacking
+## Reflect. Acknowledge short comings, doubts, other good and pertanante work
 
   - percents is calculated within panel. We might want to specify the
     ‘whole’ from which percentage is calculated.
@@ -381,15 +404,15 @@ ggbarlabs(mtcars) +
   - stacked barchart support (seems trickier, esp when bars are short)
   - labels within bars… (trickier - when bars are short)
 
-# Packaging and documentation
+# Part 2. Packaging and documentation
 
-  - `devtools::create("./ggbarlabs")`
+checklist 🚧 ✅
 
-## how does DESCRIPTION file look? Have you worked on it?
+## minimal requirements for github package. Have you:
 
-🚧 No\!
+### Created files for package archetecture with `devtools::create("./ggbarlabs")` ✅
 
-## Send functions composed in this readme to the package R folder w/ chunk names
+### Moved functions R folder? ✅
 
 ``` r
 knitr::knit_code$get() |> names()
@@ -402,7 +425,8 @@ knitr::knit_code$get() |> names()
 #> [13] "unnamed-chunk-11"          "defaults_ggbarlabs"       
 #> [15] "unnamed-chunk-12"          "unnamed-chunk-13"         
 #> [17] "unnamed-chunk-14"          "unnamed-chunk-15"         
-#> [19] "unnamed-chunk-16"
+#> [19] "unnamed-chunk-16"          "unnamed-chunk-17"         
+#> [21] "unnamed-chunk-18"
 ```
 
 ``` r
@@ -411,43 +435,93 @@ chunk_to_r("geom_barlab_count")
 chunk_to_r("geom_barlab_count_percent")
 ```
 
-## have you added roxygen skeleton for auto documentation?
+### Added roxygen skeleton? ✅
 
-Yes\!
+for auto documentation and making sure proposed functions are *exported*
 
-## have you put examples in roxygen skeleton?
+### Managed dependencies ? ✅
 
-🚧 No.😬🤭
+package dependancies managed, i.e. `depend::function()` in proposed
+functions and declared in the DESCRIPTION
 
-## have you written any formal tests?
-
-🚧 No.😬🤭
-
-## If yes to above, send tests in this readme to package via readme2pkg
-
-That would look like this…
-
-    chunk_to_tests_testthat("test_geom_barlab_count")
-
-## have you created a package website?
-
-🚧 No.🤭😬
-
-## Run check and capture errors, warnings, notes
-
-🚧 🚧 🚧 🚧 🚧 🚧 🚧 Clearly lots to do.🤭🤭🤭😬
+### Chosen a license? ✅
 
 ``` r
 usethis::use_package("ggplot2")
 usethis::use_mit_license()
 ```
 
+### Run `devtools::check()` and addressed errors? ✅
+
+## Listen 🚧
+
+### Consulted with potential users 🚧
+
+### Consulted with technical experts
+
+Getting started with that\!
+
+## Polish. Have you.
+
+### Settled on examples and put them in the roxygen skeleton? 🚧
+
+### Written formal tests of functions? 🚧
+
+### Sent tests in this readme to package via readme2pkg 🚧
+
+That would look like this…
+
+    chunk_to_tests_testthat("test_geom_barlab_count")
+
+### Have you worked added a description and author information in the DESCRIPTION file? 🚧
+
+### Addressed *all* notes, warnings and errors. 🚧
+
+## Promote
+
+### Package website built? 🚧
+
+### Package website deployed? 🚧
+
+## Harden
+
+### Submit to CRAN? 🚧
+
+# Reports, Environment
+
+## Description file extract
+
+## Environment
+
+Here I just want to print the packages and the versions
+
 ``` r
-rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
+all <- sessionInfo() |> print() |> capture.output()
+all[11:17]
+#> [1] ""                                                                         
+#> [2] "attached base packages:"                                                  
+#> [3] "[1] stats     graphics  grDevices utils     datasets  methods   base     "
+#> [4] ""                                                                         
+#> [5] "other attached packages:"                                                 
+#> [6] "[1] readme2pkg_0.0.0.9000 ggplot2_3.4.1        "                          
+#> [7] ""
+```
+
+## `devtools::check()` report
+
+``` r
+# rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
 devtools::check(pkg = ".")
 #> ══ Documenting ═════════════════════════════════════════════════════════════════
 #> ℹ Updating ggbarlabs documentation
 #> ℹ Loading ggbarlabs
+#> Warning: ── Conflicts ──────────────────────────────────────────── ggbarlabs conflicts
+#> ──
+#> ✖ `geom_barlab_count` masks `ggbarlabs::geom_barlab_count()`.
+#> ✖ `geom_barlab_count_percent` masks `ggbarlabs::geom_barlab_count_percent()`.
+#> ℹ Did you accidentally source a file rather than using `load_all()`?
+#>   Run `rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))` to
+#>   remove the conflicts.
 #> Warning: [geom_barlab_count.R:8] @return requires a value
 #> Warning: [geom_barlab_count.R:11] @examples requires a value
 #> Warning: [geom_barlab_count_percent.R:9] @return requires a value
@@ -477,7 +551,7 @@ devtools::check(pkg = ".")
 #> • _R_CHECK_PACKAGES_USED_IGNORE_UNUSED_IMPORTS_: FALSE
 #> • NOT_CRAN                                     : true
 #> ── R CMD check ─────────────────────────────────────────────────────────────────
-#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpzKrlC6/file65443905c6c7/ggbarlabs.Rcheck’
+#> * using log directory ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpACWd1q/file8f1037d958e6/ggbarlabs.Rcheck’
 #> * using R version 4.2.2 (2022-10-31)
 #> * using platform: x86_64-apple-darwin17.0 (64-bit)
 #> * using session charset: UTF-8
@@ -536,12 +610,13 @@ devtools::check(pkg = ".")
 #> * checking for non-standard things in the check directory ... OK
 #> * checking for detritus in the temp directory ... OK
 #> * DONE
+#> 
 #> Status: 1 NOTE
 #> See
-#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpzKrlC6/file65443905c6c7/ggbarlabs.Rcheck/00check.log’
+#>   ‘/private/var/folders/zy/vfmj60bs3zv6r_2dsk18_vj00000gn/T/RtmpACWd1q/file8f1037d958e6/ggbarlabs.Rcheck/00check.log’
 #> for details.
 #> ── R CMD check results ─────────────────────────────── ggbarlabs 0.0.0.9000 ────
-#> Duration: 21.9s
+#> Duration: 25.2s
 #> 
 #> ❯ checking R code for possible problems ... NOTE
 #>   geom_barlab_count: no visible binding for global variable ‘count’
