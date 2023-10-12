@@ -13,44 +13,48 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "50%"
 )
+options(tidyverse.quiet = TRUE)
+
+
+print_reports <- 'hide'
+build_package <- T
+package_exists <- T
+ignor_package_build_info <- F
 ```
 
 
-```{r, echo = F, eval = F}
-library(ggplot2)
-library(ggstamp)
-
-ggbarlabs() +
-  stamp_polygon_inverse(radius_outer = Inf) +
-  stamp_polygon(color = "darkred", 
-                fill = "lightgoldenrod1",
-                alpha = 0,
-                size = 3) + 
-  # stamp_arrow(x = -.75, xend = .75,
-  #             y = 0, yend = 0,
-  #             size = 4, 
-  #             headlength = .2, 
-  #             angle = 20,
-  #             color = "darkseagreen", 
-  #             type = "closed"
-  #             ) + 
-  stamp_text(#y = .35, x = -.25, 
-    x = -.3, y = -.34,
-             label = "ggbarlabs", 
-             size = 12, 
-             color = "dodgerblue4",
-             vjust = 0) +
-  theme_void()
-```
-
-# ggbarlabs
+# {ggbarlabs}
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-# Part 1. Addressing a problem with new functionality
+Bar charts are ubiquitous and can quickly communicate information! Labeled bar charts provide all the fast, visceral communication of traditional data visualization with all the specificity of a table.
+{ggbarlabs} lets you quickly add labels to geom_bar().
 
-## Describing problem
+## Examples
+
+```{r, eval = package_exists}
+library(tidyverse)
+library(ggbarlabs)
+ggplot(mtcars) + 
+  aes(x = factor(am)) + 
+  geom_bar() + 
+  geom_barlab_count()
+
+ggplot(mtcars) + 
+  aes(x = factor(am)) + 
+  geom_bar() + 
+  geom_barlab_count_percent()
+
+last_plot() + 
+  defaults_ggbarlabs()
+```
+
+
+
+# How got here ... Composing functions to this end
+
+## Step zero: Describing problem using status quo solutions (base ggplot)
 
 ### bar charts are ubiquitous and can quickly communicate information...
 
@@ -135,27 +139,8 @@ p +
 layer_data(last_plot(), 2)
 ```
 
+## Step 2.  Rearrange into functions
 
-
-## What if...`ggbarlabs::geom_barlab_count()`! 
-
-### Proposed User interface
-
-
-```{r, eval = F}
-ggplot(mtcars) + 
-  aes(x = am) + 
-  geom_bar() + 
-  geom_barlab_count()
-
-ggplot(mtcars) + 
-  aes(x = am) + 
-  geom_bar() + 
-  geom_barlab_count_percent()
-```
-
-
-## Composing functions to this end
 
 ### `geom_barlab_count()`
 
@@ -298,6 +283,12 @@ ggplot(mtcars) +
 🤔 🚧 Is `defaults_ggbarlabs` a good name?   is providing a different start point, like `ggbarlabs()`, a good idea? Are there things that need to be changed about implementation?  While we are here, should we think about changing default color pallets?  
 
 ```{r defaults_ggbarlabs}
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
 defaults_ggbarlabs <- function(){
   
   list(
@@ -318,6 +309,15 @@ defaults_ggbarlabs <- function(){
 }
 
 
+#' Title
+#'
+#' @param data 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ggbarlabs <- function(data = NULL, ...){
   ggplot(data= data , ... ) +
   defaults_ggbarlabs()
@@ -338,6 +338,13 @@ ggbarlabs(mtcars) +
   aes(x = factor(am), fill = factor(cyl)) + 
   geom_bar(position = "dodge") + 
   geom_barlab_count_percent()
+
+# or
+ggplot(mtcars) + 
+  aes(x = factor(am), fill = factor(cyl)) + 
+  geom_bar(position = "dodge") + 
+  geom_barlab_count(vjust = 1.7,
+                    color = "grey98")
 ```
 
 
@@ -350,13 +357,11 @@ ggbarlabs(mtcars) +
 - stacked barchart support (seems trickier, esp when bars are short)
 - labels within bars... (trickier - when bars are short)
 
-
-
-# Part 2. Packaging and documentation  🚧 ✅ 
-
-```{r}
+```{r, eval = ignor_package_build_info, echo = F}
 knitr::knit_exit()
 ```
+
+# Part 2. Packaging and documentation  🚧 ✅ 
 
 ## minimal requirements for github package.  Have you:
 
@@ -372,6 +377,7 @@ knitr::knit_code$get() |> names()
 library(readme2pkg)
 chunk_to_r("geom_barlab_count")
 chunk_to_r("geom_barlab_count_percent")
+chunk_to_r("defaults_ggbarlabs")
 ```
 
 
@@ -453,12 +459,43 @@ all[11:17]
 
 ## `devtools::check()` report
 
-```{r, error = T}
+```{r, error = T, results = print_reports}
 # rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
 devtools::check(pkg = ".")
 ```
 
+# Install development package
 
+```{r, error = T, eval = build_package, results = print_reports}
+devtools::build()
+```
+
+```{r, echo = F, eval = F}
+library(ggplot2)
+library(ggstamp)
+
+ggbarlabs() +
+  stamp_polygon_inverse(radius_outer = Inf) +
+  stamp_polygon(color = "darkred", 
+                fill = "lightgoldenrod1",
+                alpha = 0,
+                size = 3) + 
+  # stamp_arrow(x = -.75, xend = .75,
+  #             y = 0, yend = 0,
+  #             size = 4, 
+  #             headlength = .2, 
+  #             angle = 20,
+  #             color = "darkseagreen", 
+  #             type = "closed"
+  #             ) + 
+  stamp_text(#y = .35, x = -.25, 
+    x = -.3, y = -.34,
+             label = "ggbarlabs", 
+             size = 12, 
+             color = "dodgerblue4",
+             vjust = 0) +
+  theme_void()
+```
 
 
 
