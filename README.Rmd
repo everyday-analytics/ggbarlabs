@@ -6,7 +6,7 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -15,17 +15,19 @@ knitr::opts_chunk$set(
 )
 options(tidyverse.quiet = TRUE)
 
-
-print_reports <- 'hide'
-build_package <- T
+print_reports <- F
+build_package <- F
 package_exists <- T
-ignor_package_build_info <- F
+build_package_w_readme <- F
+
+print_reports_action <- ifelse(print_reports, "asis", "hide")
 ```
 
 
 # {ggbarlabs}
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 Bar charts are ubiquitous and can quickly communicate information! Labeled bar charts provide all the fast, visceral communication of traditional data visualization with all the specificity of a table.
@@ -47,12 +49,12 @@ ggplot(mtcars) +
   geom_barlab_count_percent()
 
 last_plot() + 
-  defaults_ggbarlabs()
+  ggbarlabs:::defaults_ggbarlabs()
 ```
 
 
 
-# How got here ... Composing functions to this end
+# How we got here ... Composing functions to this end
 
 ## Step zero: Describing problem using status quo solutions (base ggplot)
 
@@ -282,14 +284,14 @@ ggplot(mtcars) +
 
 🤔 🚧 Is `defaults_ggbarlabs` a good name?   is providing a different start point, like `ggbarlabs()`, a good idea? Are there things that need to be changed about implementation?  While we are here, should we think about changing default color pallets?  
 
-```{r defaults_ggbarlabs}
+```{r theme_barlabs}
 #' Title
 #'
 #' @return
 #' @export
 #'
 #' @examples
-defaults_ggbarlabs <- function(){
+theme_barlabs <- function(){
   
   list(
   theme_classic(base_size = 15) ,
@@ -304,8 +306,49 @@ defaults_ggbarlabs <- function(){
         axis.ticks = element_blank(),
         axis.line.x = element_line(colour = "gray35"),
         legend.position = "top",
-        legend.justification = 0) ,
-  scale_y_continuous(expand = expansion(mult = c(0, .15))))
+        legend.justification = 0))
+}
+```
+
+
+```{r scale_y_barlabs}
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
+scale_y_barlabs <- function(...){
+    ggplot2::scale_y_continuous(expand = expansion(mult = c(0, .15)), ...)
+}
+```
+
+
+```{r scale_fill_barlabs}
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
+scale_fill_barlabs <- function(...){
+    ggplot2::scale_fill_viridis_d(...)
+}
+```
+
+
+```{r defaults_barlabs}
+#' Title
+#'
+#' @return
+#'
+#' @examples
+defaults_barlabs <- function(){
+  
+  list(theme_barlabs(),
+       scale_y_barlabs(), 
+       scale_fill_barlabs()
+       )
 }
 
 
@@ -319,8 +362,8 @@ defaults_ggbarlabs <- function(){
 #'
 #' @examples
 ggbarlabs <- function(data = NULL, ...){
-  ggplot(data= data , ... ) +
-  defaults_ggbarlabs()
+  ggplot(data = data , ... ) +
+  defaults_barlabs()
 }
 ```
 
@@ -331,7 +374,15 @@ ggplot(mtcars) +
   aes(x = factor(am)) + 
   geom_bar(fill = alpha("navy", .9)) + 
   geom_barlab_count_percent() + 
-  defaults_ggbarlabs()
+  theme_barlabs() + 
+  scale_y_barlabs() + 
+  scale_fill_barlabs()
+
+ggplot(mtcars) + 
+  aes(x = factor(am)) + 
+  geom_bar(fill = alpha("navy", .9)) + 
+  geom_barlab_count_percent() + 
+  defaults_barlabs()  # will be not exported?
 
 # or
 ggbarlabs(mtcars) + 
@@ -357,8 +408,8 @@ ggplot(mtcars) +
 - stacked barchart support (seems trickier, esp when bars are short)
 - labels within bars... (trickier - when bars are short)
 
-```{r, eval = ignor_package_build_info, echo = F}
-knitr::knit_exit()
+```{r, echo = F}
+if(!build_package_w_readme){knitr::knit_exit()}
 ```
 
 # Part 2. Packaging and documentation  🚧 ✅ 
@@ -369,9 +420,7 @@ knitr::knit_exit()
 
 ### Moved functions R folder? ✅  
 
-```{r}
-knitr::knit_code$get() |> names()
-```
+
 
 ```{r}
 library(readme2pkg)
@@ -459,14 +508,14 @@ all[11:17]
 
 ## `devtools::check()` report
 
-```{r, error = T, results = print_reports}
+```{r, error = T, results = print_reports_action}
 # rm(list = c("geom_barlab_count", "geom_barlab_count_percent"))
 devtools::check(pkg = ".")
 ```
 
-# Install development package
+# Install development package with `devtools::build()`
 
-```{r, error = T, eval = build_package, results = print_reports}
+```{r, error = T, eval = build_package, results = print_reports_action}
 devtools::build()
 ```
 
