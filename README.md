@@ -49,7 +49,7 @@ ggplot(mtcars) +
   geom_barlab_count()
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-1-1.png" width="70%" />
 
 ``` r
 
@@ -59,7 +59,7 @@ ggplot(mtcars) +
   geom_barlab_count_percent()
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-1-2.png" width="70%" />
 
 ``` r
 
@@ -67,7 +67,7 @@ last_plot() +
   ggbarlabs:::defaults_ggbarlabs()
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-3.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-1-3.png" width="70%" />
 
 # How we got here … Composing functions to this end
 
@@ -83,7 +83,7 @@ ggplot(mtcars) +
   geom_bar(position = "dodge") 
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="70%" />
 
 ``` r
 
@@ -128,7 +128,7 @@ p +
             vjust = -.7)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="70%" />
 
 ``` r
 
@@ -138,7 +138,7 @@ p +
             vjust = -.7)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-2.png" width="70%" />
 
 ``` r
 
@@ -150,7 +150,7 @@ p +
             vjust = -.5, lineheight = .8)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-3.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-3.png" width="70%" />
 
 ``` r
 
@@ -159,7 +159,7 @@ last_plot() +
   facet_grid(~cyl)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-4.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-4.png" width="70%" />
 
 ``` r
 
@@ -174,7 +174,7 @@ p +
 #> Warning: Width not defined. Set with `position_dodge2(width = ...)`
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-5.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-5.png" width="70%" />
 
 ``` r
 
@@ -233,13 +233,13 @@ the range (0, 1), but it’s not recommended.’
 #' @export
 #'
 #' @examples
-geom_barlab_count <- function(vjust = -0.15, position =
+geom_barlab_count <- function(vjust = -0.15, size = 5, position =
                               ggplot2::position_dodge2(width = .9,
                                                        preserve = "single"), ...){
 
   ggplot2::stat_count(geom = "text",
                       ggplot2::aes(label = ggplot2::after_stat(count)),
-                      vjust = vjust,
+                      vjust = vjust, size = size,
                       position = position,
                       ...
   )
@@ -259,7 +259,7 @@ ggplot(mtcars) +
    geom_barlab_count()
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="70%" />
 
 ``` r
 
@@ -267,7 +267,7 @@ last_plot() +
   aes(fill = factor(am))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-7-2.png" width="70%" />
 
 ### `geom_barlab_count_percent`
 
@@ -287,7 +287,7 @@ would allow greater customizability in terms of defining denominator
 #' @export
 #'
 #' @examples
-geom_barlab_count_percent <- function(vjust = -0.1,
+geom_barlab_count_percent <- function(vjust = -0.1, size = 5,
                                     lineheight = .85,
                                     position = ggplot2::position_dodge2(width = .9,
                                                                preserve = "single"), ...){
@@ -301,7 +301,7 @@ geom_barlab_count_percent <- function(vjust = -0.1,
                                            ggplot2::after_stat(PANEL),
                                            sum)[ggplot2::after_stat(PANEL)],
                                   1), "%)" )),
-             vjust = vjust,
+             vjust = vjust, size = size,
              lineheight = lineheight,
              position = position,
              ...
@@ -319,7 +319,7 @@ ggplot(mtcars) +
     geom_barlab_count_percent()
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="70%" />
 
 ``` r
 
@@ -327,7 +327,7 @@ last_plot() +
     aes(fill = factor(am))
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-8-2.png" width="70%" />
 
 ## Complementary functionality `ggbarlabs()`
 
@@ -360,7 +360,7 @@ ggplot(mtcars) +
 #> ggplot2::after_stat(count)), : Ignoring unknown parameters: `nudge_y`
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="70%" />
 
 ## Build `defaults_ggbarlabs` and `ggbarlabs()`
 
@@ -376,10 +376,9 @@ changing default color pallets?
 #' @export
 #'
 #' @examples
-theme_barlabs <- function(){
+theme_barlabs <- function(base_size = 25, ...){
   
-  list(
-  theme_classic(base_size = 15) ,
+  theme_classic(base_size = base_size, ...)  %+replace%
   theme(axis.line.y = element_blank(),
         axis.text.y.right = element_blank(),
         axis.ticks.y = element_blank(),
@@ -391,7 +390,9 @@ theme_barlabs <- function(){
         axis.ticks = element_blank(),
         axis.line.x = element_line(colour = "gray35"),
         legend.position = "top",
-        legend.justification = 0))
+        legend.justification = 0, 
+        complete = TRUE
+        )
 }
 ```
 
@@ -461,7 +462,7 @@ ggplot(mtcars) +
   scale_fill_barlabs()
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="70%" />
 
 ``` r
 
@@ -472,7 +473,7 @@ ggplot(mtcars) +
   defaults_barlabs()  # will be not exported?
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-2.png" width="70%" />
 
 ``` r
 
@@ -483,7 +484,7 @@ ggbarlabs(mtcars) +
   geom_barlab_count_percent()
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-3.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-3.png" width="70%" />
 
 ``` r
 
@@ -495,7 +496,7 @@ ggplot(mtcars) +
                     color = "grey98")
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-4.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-4.png" width="70%" />
 
 ## Reflect. Acknowledge short comings, doubts, other good and pertanent work
 

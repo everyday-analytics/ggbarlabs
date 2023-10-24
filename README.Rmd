@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "50%"
+  out.width = "70%"
 )
 options(tidyverse.quiet = TRUE)
 
@@ -166,13 +166,13 @@ June Choe, authored the first round ggdirect::geom_text_count and ggdirect::geom
 #' @export
 #'
 #' @examples
-geom_barlab_count <- function(vjust = -0.15, position =
+geom_barlab_count <- function(vjust = -0.15, size = 5, position =
                               ggplot2::position_dodge2(width = .9,
                                                        preserve = "single"), ...){
 
   ggplot2::stat_count(geom = "text",
                       ggplot2::aes(label = ggplot2::after_stat(count)),
-                      vjust = vjust,
+                      vjust = vjust, size = size,
                       position = position,
                       ...
   )
@@ -215,7 +215,7 @@ last_plot() +
 #' @export
 #'
 #' @examples
-geom_barlab_count_percent <- function(vjust = -0.1,
+geom_barlab_count_percent <- function(vjust = -0.1, size = 5,
                                     lineheight = .85,
                                     position = ggplot2::position_dodge2(width = .9,
                                                                preserve = "single"), ...){
@@ -229,7 +229,7 @@ geom_barlab_count_percent <- function(vjust = -0.1,
                                            ggplot2::after_stat(PANEL),
                                            sum)[ggplot2::after_stat(PANEL)],
                                   1), "%)" )),
-             vjust = vjust,
+             vjust = vjust, size = size,
              lineheight = lineheight,
              position = position,
              ...
@@ -291,10 +291,9 @@ ggplot(mtcars) +
 #' @export
 #'
 #' @examples
-theme_barlabs <- function(){
+theme_barlabs <- function(base_size = 25, ...){
   
-  list(
-  theme_classic(base_size = 15) ,
+  theme_classic(base_size = base_size, ...)  %+replace%
   theme(axis.line.y = element_blank(),
         axis.text.y.right = element_blank(),
         axis.ticks.y = element_blank(),
@@ -306,7 +305,9 @@ theme_barlabs <- function(){
         axis.ticks = element_blank(),
         axis.line.x = element_line(colour = "gray35"),
         legend.position = "top",
-        legend.justification = 0))
+        legend.justification = 0, 
+        complete = TRUE
+        )
 }
 ```
 
