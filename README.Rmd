@@ -438,7 +438,7 @@ ggplot2::diamonds %>%
 
 ## x position as direct label.  
 
-But x becomes numeric, so we have to put the category back on.  Right now seems fragile - but if we can recover cut_types at a before_stat or something, that would be pretty cool.
+But x becomes numeric, so we have to put the category back on.  Right now seems fragile - but if we can recover cut_types at a 'before_stat' or something, that would be pretty cool.  The coord_flip() makes everything feel confusing to talk about. lol.
 
 ```{r}
 cut_types <- levels(ggplot2::diamonds$cut)
@@ -461,6 +461,10 @@ ggplot2::diamonds %>%
                  vjust = -2.5)) + 
   aes(fill = cut == "Ideal") +
   scale_fill_manual(values = c("darkgrey", "midnightblue"))
+
+last_plot() + 
+  theme_void() + 
+  guides(fill = "none", color= "none")
 
 ```
 

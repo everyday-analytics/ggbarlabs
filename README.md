@@ -542,8 +542,9 @@ ggplot2::diamonds %>%
 ## x position as direct label.
 
 But x becomes numeric, so we have to put the category back on. Right now
-seems fragile - but if we can recover cut\_types at a before\_stat or
-something, that would be pretty cool.
+seems fragile - but if we can recover cut\_types at a ‘before\_stat’ or
+something, that would be pretty cool. The coord\_flip() makes everything
+feel confusing to talk about. lol.
 
 ``` r
 cut_types <- levels(ggplot2::diamonds$cut)
@@ -569,3 +570,12 @@ ggplot2::diamonds %>%
 ```
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="70%" />
+
+``` r
+
+last_plot() + 
+  theme_void() + 
+  guides(fill = "none", color= "none")
+```
+
+<img src="man/figures/README-unnamed-chunk-12-2.png" width="70%" />
