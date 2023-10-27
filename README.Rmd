@@ -412,6 +412,9 @@ ggplot(mtcars) +
 
 # Diamonds Challenge
 
+
+https://www.linkedin.com/posts/cedscherer_yet-another-how-to-on-labelling-bar-graphs-activity-7123683350321504257-HBLB?utm_source=share&utm_medium=member_desktop
+
 ## Moving axis labels attempt, but justification-margin dance seems very fragile...
 
 https://stackoverflow.com/questions/55406829/ggplot-put-axis-text-inside-plot
@@ -425,8 +428,8 @@ ggplot2::diamonds %>%
   coord_flip() + 
   stat_count(geom = "text", 
              aes(label = after_stat(count), 
-                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
-                 color = after_stat(count>2000))) + 
+                 hjust = after_stat(ifelse(count/sum(count)>.3, 1.2, -.2)),
+                 color = after_stat(count/sum(count)>.3))) + 
   scale_color_manual(values = c("white", "grey25") %>% rev()) +
   scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
   theme(axis.text.y = element_text(hjust = 0, vjust = -2.75,
@@ -434,6 +437,8 @@ ggplot2::diamonds %>%
         axis.ticks = element_blank()) + 
   aes(fill = cut == "Ideal") +
   scale_fill_manual(values = c("darkgrey", "midnightblue"))
+
+layer_data(last_plot())
 ```
 
 ## x position as direct label.  
@@ -450,8 +455,8 @@ ggplot2::diamonds %>%
   coord_flip() + 
   stat_count(geom = "text", 
              aes(label = after_stat(count), 
-                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
-                 color = after_stat(count>2000))) + 
+                 hjust = after_stat(ifelse(count/sum(count)>.1, 1.2, -.2)),
+                 color = after_stat(count/sum(count)>.1))) + 
   scale_color_manual(values = c("white", "grey25") %>% rev()) +
   stat_count(geom = "text", y = 0,
              aes(label = after_stat(x) %>% 

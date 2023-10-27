@@ -513,6 +513,8 @@ ggplot(mtcars) +
 
 # Diamonds Challenge
 
+<https://www.linkedin.com/posts/cedscherer_yet-another-how-to-on-labelling-bar-graphs-activity-7123683350321504257-HBLB?utm_source=share&utm_medium=member_desktop>
+
 ## Moving axis labels attempt, but justification-margin dance seems very fragile…
 
 <https://stackoverflow.com/questions/55406829/ggplot-put-axis-text-inside-plot>
@@ -526,8 +528,8 @@ ggplot2::diamonds %>%
   coord_flip() + 
   stat_count(geom = "text", 
              aes(label = after_stat(count), 
-                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
-                 color = after_stat(count>2000))) + 
+                 hjust = after_stat(ifelse(count/sum(count)>.3, 1.2, -.2)),
+                 color = after_stat(count/sum(count)>.3))) + 
   scale_color_manual(values = c("white", "grey25") %>% rev()) +
   scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
   theme(axis.text.y = element_text(hjust = 0, vjust = -2.75,
@@ -538,6 +540,23 @@ ggplot2::diamonds %>%
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="70%" />
+
+``` r
+
+layer_data(last_plot())
+#>           fill     y count prop x flipped_aes PANEL group ymin  ymax xmin xmax
+#> 1     darkgrey  1610  1610    1 1       FALSE     1     1    0  1610 0.75 1.25
+#> 2     darkgrey  4906  4906    1 2       FALSE     1     2    0  4906 1.75 2.25
+#> 3     darkgrey 12082 12082    1 3       FALSE     1     3    0 12082 2.75 3.25
+#> 4     darkgrey 13791 13791    1 4       FALSE     1     4    0 13791 3.75 4.25
+#> 5 midnightblue 21551 21551    1 5       FALSE     1     5    0 21551 4.75 5.25
+#>   colour linewidth linetype alpha
+#> 1     NA       0.5        1    NA
+#> 2     NA       0.5        1    NA
+#> 3     NA       0.5        1    NA
+#> 4     NA       0.5        1    NA
+#> 5     NA       0.5        1    NA
+```
 
 ## x position as direct label.
 
@@ -556,8 +575,8 @@ ggplot2::diamonds %>%
   coord_flip() + 
   stat_count(geom = "text", 
              aes(label = after_stat(count), 
-                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
-                 color = after_stat(count>2000))) + 
+                 hjust = after_stat(ifelse(count/sum(count)>.1, 1.2, -.2)),
+                 color = after_stat(count/sum(count)>.1))) + 
   scale_color_manual(values = c("white", "grey25") %>% rev()) +
   stat_count(geom = "text", y = 0,
              aes(label = after_stat(x) %>% 
