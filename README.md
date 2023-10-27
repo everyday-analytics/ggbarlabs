@@ -22,6 +22,11 @@
       - [Reflect. Acknowledge short comings, doubts, other good and
         pertanent
         work](#reflect-acknowledge-short-comings-doubts-other-good-and-pertanent-work)
+  - [Diamonds Challenge](#diamonds-challenge)
+      - [Moving axis labels attempt, but justification-margin dance
+        seems very
+        fragile…](#moving-axis-labels-attempt-but-justification-margin-dance-seems-very-fragile)
+      - [x position as direct label.](#x-position-as-direct-label)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -505,3 +510,62 @@ ggplot(mtcars) +
   - Horizontal bars
   - stacked barchart support (seems trickier, esp when bars are short)
   - labels within bars… (trickier - when bars are short)
+
+# Diamonds Challenge
+
+## Moving axis labels attempt, but justification-margin dance seems very fragile…
+
+<https://stackoverflow.com/questions/55406829/ggplot-put-axis-text-inside-plot>
+
+``` r
+library(tidyverse)
+ggplot2::diamonds %>%
+  ggplot() + 
+  aes(x = fct_infreq(cut) %>% fct_rev()) + 
+  geom_bar(width = .5) + 
+  coord_flip() + 
+  stat_count(geom = "text", 
+             aes(label = after_stat(count), 
+                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
+                 color = after_stat(count>2000))) + 
+  scale_color_manual(values = c("white", "grey25") %>% rev()) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
+  theme(axis.text.y = element_text(hjust = 0, vjust = -2.75,
+                                 margin = margin(l = 27, r = -45)),
+        axis.ticks = element_blank()) + 
+  aes(fill = cut == "Ideal") +
+  scale_fill_manual(values = c("darkgrey", "midnightblue"))
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="70%" />
+
+## x position as direct label.
+
+But x becomes numeric, so we have to put the category back on. Right now
+seems fragile - but if we can recover cut\_types at a before\_stat or
+something, that would be pretty cool.
+
+``` r
+cut_types <- levels(ggplot2::diamonds$cut)
+
+ggplot2::diamonds %>%
+  ggplot() + 
+  aes(x = fct_infreq(cut) %>% fct_rev()) + 
+  geom_bar(width = .5) + 
+  coord_flip() + 
+  stat_count(geom = "text", 
+             aes(label = after_stat(count), 
+                 hjust = after_stat(ifelse(count>2000, 1.2, -.2)),
+                 color = after_stat(count>2000))) + 
+  scale_color_manual(values = c("white", "grey25") %>% rev()) +
+  stat_count(geom = "text", y = 0,
+             aes(label = after_stat(x) %>% 
+                   factor(level = 1:5, 
+                          labels = cut_types),
+                 hjust = 0,
+                 vjust = -2.5)) + 
+  aes(fill = cut == "Ideal") +
+  scale_fill_manual(values = c("darkgrey", "midnightblue"))
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="70%" />
