@@ -443,7 +443,7 @@ layer_data(last_plot())
 
 ## x as direct label.  
 
-'...could that just be aes(label = cut), referring to the cut column?' yes! 
+'...could that just be aes(label = cut), referring to the cut column?' yes, June! 
 
 ```{r}
 ggplot2::diamonds %>%
@@ -457,7 +457,7 @@ ggplot2::diamonds %>%
                  color = after_stat(count/sum(count)>.1))) + 
   scale_color_manual(values = c("white", "grey25") %>% rev()) +
   stat_count(geom = "text", y = 0,
-             aes(label = fct_infreq(cut) %>% fct_rev(),
+             aes(label = cut,  
                  hjust = 0,
                  vjust = -2.5)) + 
   aes(fill = cut == "Ideal") +
